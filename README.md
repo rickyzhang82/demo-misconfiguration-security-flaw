@@ -1,6 +1,13 @@
 # How to hack your container
 
-To make my point, here my PoC.
+## Motivation
+
+This repo is for PoC purpose. It demos my points that the blogger from [the blog here](https://dev.to/andre/docker-restricting-in--and-outbound-network-traffic-67p) is not securing his container at all. Obviously, he violated the least privilege principle in security if you read my PoC steps below.
+
+According to his approach, anyone with docker group permission can do some serious damage as root and bypass his firewall rule defined inside the container.
+
+There is a proper way to do this sort of thing. For example, he should use `USER app` in his Dockerfile and then change firewall in the host rather than do that in the container. 
+
 
 ## Step 1 Create any long running container
 
