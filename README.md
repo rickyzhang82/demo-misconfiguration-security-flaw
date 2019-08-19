@@ -2,12 +2,22 @@
 
 ## Motivation
 
-This repo is for PoC purpose. It demos my points that the blogger from [the blog here](https://dev.to/andre/docker-restricting-in--and-outbound-network-traffic-67p) is not securing his container at all. Obviously, he violated the least privilege principle in security if you read my PoC steps below.
+This repo is for PoC purpose. It demos my points that the blogger from [the blog here](https://dev.to/andre/docker-restricting-in--and-outbound-network-traffic-67p) is not securing his container at all. 
 
-According to his approach, anyone with docker group permission can do some serious damage as root and bypass his firewall rule defined inside the container.
+In his approach, he containerized a Node.js app. But he kept root permission in Dockerfile without switching to a unprivileged user. He also forced user to provide `--privileged` permission when lauching container so that he can manipulate iptables **inside** the container. He thought it was safe that he could switch user when launching his Node.js app.
 
-There is a proper way to do this sort of thing. For example, he should use `USER app` in his Dockerfile and then change firewall in the host rather than do that in the container. 
+It is wrong.
 
+Obviously, he violated [the principles of least privilege in security](https://en.wikipedia.org/wiki/Principle_of_least_privilege). His misconfiguration in container opens up the door rather than secure the data.
+
+My PoC steps below shows that anyone with docker group permission can bypass his firewall rule defined inside the container and also do some serious damage to the host machine `/dev`, i.e. no limit access hardware like hard disk.
+
+There is a proper way to do this sort of things. For example, 
+
+- Use `USER app` in his Dockerfile rather than switch user in `entrypoint.sh`.
+- Modify firewall rule in the host rather than do that in the container. 
+
+Our Internet is full of disinformation. Do **NOT** copy and paste anything blindly and think it is truth.
 
 ## Step 1 Create any long running container
 
